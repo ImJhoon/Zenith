@@ -40,6 +40,11 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    
+    <!-- Markdown Parsers -->
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
@@ -433,12 +438,23 @@
               <button class="ql-formula"></button>
               <button class="ql-blockquote"></button>
             </span>
+            <span class="ql-formats">
+              <button id="toggle-markdown-mode" class="flex items-center justify-center w-6 h-6 rounded hover:bg-glass-hover text-text-muted transition-colors" title="마크다운 모드 전환">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+              </button>
+            </span>
           </div>
 
           <div
             id="memo-content"
             class="w-full flex-1 font-editor text-lg leading-relaxed text-text-main/90 focus:outline-none bg-transparent"
           ></div>
+          <textarea
+            id="markdown-editor"
+            class="hidden w-full flex-1 font-mono text-sm leading-relaxed text-text-main/90 focus:outline-none bg-transparent p-4 resize-none border-none outline-none"
+            placeholder="마크다운 코드를 입력하세요..."
+            spellcheck="false"
+          ></textarea>
         </div>
 
         <!-- Reader Content (Read-Only) -->

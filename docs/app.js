@@ -11,6 +11,7 @@ const AppState = {
     showWordCount: true
   },
   activeMemoId: null,
+  isMarkdownMode: false,
   currentFilter: { type: 'all', value: null },
   currentSort: 'updatedDesc',
   searchQuery: '',
@@ -183,6 +184,8 @@ const DOM = {
   emptyState: document.getElementById('empty-state'),
   memoTitle: document.getElementById('memo-title'),
   memoContent: document.getElementById('memo-content'),
+  markdownEditor: document.getElementById('markdown-editor'),
+  btnToggleMarkdown: document.getElementById('toggle-markdown-mode'),
   btnTogglePin: document.getElementById('btn-toggle-pin'),
   tabViewer: document.getElementById('tab-viewer'),
   tabEditor: document.getElementById('tab-editor'),
@@ -406,6 +409,12 @@ function loadActiveMemo() {
   isSystemLoading = true;
   DOM.memoTitle.value = memo.title;
   quill.root.innerHTML = memo.content || '';
+  
+  if (AppState.isMarkdownMode && DOM.markdownEditor) {
+    let md = window.TurndownService ? new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced' }).turndown(memo.content || '') : (memo.content || '');
+    DOM.markdownEditor.value = md;
+  }
+  
   setTimeout(() => { if (typeof ensureTrailingParagraph === 'function') ensureTrailingParagraph(); }, 0);
   isSystemLoading = false;
   
@@ -458,8 +467,14 @@ function loadActiveMemo() {
 }
 
 function updateWordCount() {
-  if (!quill) return;
-  const wordCount = quill.getText().trim() ? quill.getText().trim().split(/\s+/).length : 0;
+  let text = '';
+  if (AppState.isMarkdownMode && DOM.markdownEditor) {
+    text = DOM.markdownEditor.value.trim();
+  } else if (quill) {
+    text = quill.getText().trim();
+  }
+  
+  const wordCount = text ? text.split(/\s+/).length : 0;
   if(DOM.wordCount && AppState.settings.showWordCount) {
     DOM.wordCount.textContent = `${wordCount} 단어`;
     DOM.wordCount.style.display = 'block';
@@ -473,14 +488,63 @@ const showSaveStatus = debounce(() => {
   DOM.saveStatus.classList.remove('text-primary');
 }, 1000);
 
+// --- Markdown Mode Toggle ---
+function toggleMarkdownMode() {
+  if (!AppState.activeMemoId || !DOM.markdownEditor || !DOM.memoContent) return;
+
+  AppState.isMarkdownMode = !AppState.isMarkdownMode;
+  const isMD = AppState.isMarkdownMode;
+
+  if (isMD) {
+    // Switch to Markdown Mode
+    let html = quill.root.innerHTML;
+    let md = window.TurndownService ? new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced' }).turndown(html) : html;
+    
+    DOM.markdownEditor.value = md;
+    DOM.memoContent.classList.add('hidden');
+    DOM.markdownEditor.classList.remove('hidden');
+    DOM.btnToggleMarkdown.classList.add('bg-glass-hover', 'text-primary');
+    DOM.btnToggleMarkdown.classList.remove('text-text-muted');
+    DOM.markdownEditor.focus();
+  } else {
+    // Switch to WYSIWYG
+    let md = DOM.markdownEditor.value;
+    let html = window.marked ? marked.parse(md) : md;
+    
+    quill.root.innerHTML = html;
+    DOM.markdownEditor.classList.add('hidden');
+    DOM.memoContent.classList.remove('hidden');
+    DOM.btnToggleMarkdown.classList.remove('bg-glass-hover', 'text-primary');
+    DOM.btnToggleMarkdown.classList.add('text-text-muted');
+    quill.focus();
+  }
+}
+
+if (DOM.btnToggleMarkdown) {
+  DOM.btnToggleMarkdown.addEventListener('click', toggleMarkdownMode);
+}
+
+if (DOM.markdownEditor) {
+  DOM.markdownEditor.addEventListener('input', () => {
+    if (!isSystemLoading) handleInput();
+  });
+}
+
 function handleInput() {
   if (!AppState.activeMemoId || isSystemLoading) return;
   DOM.saveStatus.textContent = '저장 중...';
   DOM.saveStatus.classList.add('text-primary');
   
+  let currentHTML = '';
+  if (AppState.isMarkdownMode) {
+    currentHTML = window.marked ? marked.parse(DOM.markdownEditor.value) : DOM.markdownEditor.value;
+  } else {
+    currentHTML = quill.root.innerHTML;
+  }
+  
   AppState.updateMemo(AppState.activeMemoId, {
     title: DOM.memoTitle.value,
-    content: quill.root.innerHTML
+    content: currentHTML
   });
   
   updateWordCount();
@@ -529,10 +593,14 @@ function setMode(mode) {
 
     // Sync content to reader
     if(DOM.readerTitle) DOM.readerTitle.textContent = DOM.memoTitle.value || '제목 없는 메모';
-    if(quill && DOM.readerContent) {
-      DOM.readerContent.innerHTML = quill.root.innerHTML;
+    if(DOM.readerContent) {
+      if (AppState.isMarkdownMode && DOM.markdownEditor) {
+        DOM.readerContent.innerHTML = window.marked ? marked.parse(DOM.markdownEditor.value) : DOM.markdownEditor.value;
+      } else if (quill) {
+        DOM.readerContent.innerHTML = quill.root.innerHTML;
+      }
       // Apply syntax highlighting to code blocks in reader view
-      DOM.readerContent.querySelectorAll('pre.ql-syntax').forEach(block => {
+      DOM.readerContent.querySelectorAll('pre.ql-syntax, pre code').forEach(block => {
         hljs.highlightElement(block);
       });
     }
