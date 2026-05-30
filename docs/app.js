@@ -5,7 +5,7 @@ const AppState = {
   memos: [],
   folders: [],
   settings: {
-    theme: 'dark',
+    theme: 'light',
     codeTheme: 'obsidian',
     defaultView: 'viewer',
     showWordCount: true
