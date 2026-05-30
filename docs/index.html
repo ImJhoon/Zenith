@@ -1,429 +1,833 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko" class="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zenith</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&display=swap" rel="stylesheet">
-  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            ui: ['Sweet', 'Inter', 'sans-serif'],
-            editor: ['Literata', 'serif'],
-          },
-          colors: {
-            base: 'var(--color-base)',
-            surface: {
-              DEFAULT: 'var(--color-surface)',
-              low: 'var(--color-surface-low)',
-              high: 'var(--color-surface-high)',
-            },
-            primary: {
-              DEFAULT: '#6366f1',
-              light: '#8083ff',
-              dark: '#494bd6',
-            },
-            text: {
-              main: 'var(--color-text-main)',
-              muted: 'var(--color-text-muted)',
-            },
-            accent: {
-              mint: '#4edea3',
-              amber: '#ffb95f',
-              rose: '#ffb4ab',
-            },
-            glass: {
-              bg: 'var(--color-glass-bg)',
-              border: 'var(--color-glass-border)',
-              hover: 'var(--color-glass-hover)',
-            }
-          },
-          animation: {
-            'fade-in': 'fadeIn 0.3s ease-out forwards',
-            'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-          },
-          keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' },
-            },
-            slideUp: {
-              '0%': { opacity: '0', transform: 'translateY(10px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/feather-icons"></script>
-</head>
-<body class="bg-base text-text-main font-ui antialiased h-screen overflow-hidden flex selection:bg-primary selection:text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zenith</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.quilljs.com/1.3.7/quill.snow.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    />
+    <link rel="icon" type="image/png" href="./src/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./src/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="./src/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./src/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="MyWebSite" />
+    <link rel="manifest" href="./src/favicon/site.webmanifest" />
 
-  <!-- Background decorative glows -->
-  <div class="absolute inset-0 pointer-events-none overflow-hidden">
-    <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px]"></div>
-    <div class="absolute bottom-[-20%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent-mint/5 blur-[100px]"></div>
-  </div>
-
-  <!-- Sidebar -->
-  <aside class="relative z-10 w-72 h-full bg-white/[0.02] border-r border-glass-border backdrop-blur-3xl flex flex-col transition-all duration-300">
-    <div class="p-6">
-      <h1 class="text-xl font-bold tracking-tight mb-8 text-primary">Zenith</h1>
-      <button id="btn-new-memo" class="w-full bg-primary hover:bg-primary-light text-white rounded-xl py-3 px-4 font-medium transition-all duration-300 shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] flex items-center justify-center gap-2">
-        <i data-feather="plus" class="w-5 h-5"></i> 새 메모
-      </button>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              ui: ["Sweet", "Inter", "sans-serif"],
+              editor: ["Literata", "serif"],
+            },
+            colors: {
+              base: "var(--color-base)",
+              surface: {
+                DEFAULT: "var(--color-surface)",
+                low: "var(--color-surface-low)",
+                high: "var(--color-surface-high)",
+              },
+              primary: {
+                DEFAULT: "#8b5cf6", // Cosmic Violet
+                light: "#a78bfa",
+                dark: "#7c3aed",
+              },
+              text: {
+                main: "var(--color-text-main)",
+                muted: "var(--color-text-muted)",
+              },
+              accent: {
+                mint: "#34d399", // Aurora Teal
+                amber: "#fbbf24", // Starlight Amber
+                rose: "#fb7185", // Sunrise Rose
+              },
+              glass: {
+                bg: "var(--color-glass-bg)",
+                border: "var(--color-glass-border)",
+                hover: "var(--color-glass-hover)",
+              },
+            },
+            animation: {
+              "fade-in": "fadeIn 0.3s ease-out forwards",
+              "slide-up": "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/feather-icons"></script>
+  </head>
+  <body
+    class="bg-base text-text-main font-ui antialiased h-screen overflow-hidden flex relative selection:bg-primary selection:text-white"
+  >
+    <!-- Background decorative glows -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div
+        class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px]"
+      ></div>
+      <div
+        class="absolute bottom-[-20%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent-mint/5 blur-[100px]"
+      ></div>
     </div>
 
-    <!-- Search -->
-    <div class="px-4 mb-4">
-      <div class="relative group">
-        <i data-feather="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors"></i>
-        <input type="text" id="search-input" placeholder="메모 검색.." class="w-full bg-surface-low border border-glass-border rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-text-muted/50">
-      </div>
-    </div>
+    <!-- Sidebar Overlay (Mobile) -->
+    <div
+      id="sidebar-overlay"
+      class="fixed inset-0 bg-base/80 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300 lg:hidden"
+    ></div>
 
-    <!-- Navigation -->
-    <nav class="flex-1 overflow-y-auto px-4 pb-6 space-y-1" id="nav-folders">
-      <button class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-bg hover:text-text-main group transition-all" data-filter="all">
-        <i data-feather="inbox" class="w-4 h-4 text-primary group-hover:text-primary transition-colors"></i>
-        <span>모든 메모</span>
-      </button>
-      <button class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-bg hover:text-text-main group transition-all" data-filter="favorites">
-        <i data-feather="star" class="w-4 h-4 group-hover:text-accent-amber transition-colors"></i>
-        <span>즐겨찾기</span>
-      </button>
-      <button class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-bg hover:text-text-main group transition-all" data-filter="trash">
-        <i data-feather="trash-2" class="w-4 h-4 group-hover:text-accent-rose transition-colors"></i>
-        <span>휴지통</span>
-      </button>
-      
-      <div class="pt-6 pb-2 px-3 text-xs font-semibold uppercase tracking-widest text-text-muted/50 flex justify-between items-center">
-        폴더
-        <button id="btn-add-folder" class="hover:text-text-main transition-colors" title="폴더 추가"><i data-feather="plus" class="w-3 h-3"></i></button>
-      </div>
-      <div id="custom-folders-list" class="space-y-1">
-        <!-- Folders rendered here via JS -->
-      </div>
-    </nav>
-    <div class="p-4 mt-auto border-t border-glass-border">
-      <div class="flex items-center gap-2">
-        <button id="btn-open-settings" class="flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-hover hover:text-text-main transition-colors text-sm font-medium">
-          <i data-feather="settings" class="w-4 h-4"></i> 설정
-        </button>
-        <button id="btn-open-help" class="flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-hover hover:text-text-main transition-colors text-sm font-medium">
-          <i data-feather="help-circle" class="w-4 h-4"></i> 도움말
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="fixed lg:relative z-50 lg:z-10 w-72 h-full bg-surface-high/95 lg:bg-white/[0.02] border-r border-glass-border backdrop-blur-3xl flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0"
+    >
+      <div class="p-6">
+        <h1 class="text-xl font-bold tracking-tight mb-8 text-primary">
+          Zenith
+        </h1>
+        <button
+          id="btn-new-memo"
+          class="w-full bg-primary hover:bg-primary-light text-white rounded-xl py-3 px-4 font-medium transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] flex items-center justify-center gap-2"
+        >
+          <i data-feather="plus" class="w-5 h-5"></i> 새 메모
         </button>
       </div>
-    </div>
-  </aside>
 
-  <!-- Memo List Surface -->
-  <section class="relative z-10 w-80 h-full bg-surface/50 border-r border-glass-border backdrop-blur-2xl flex flex-col border-t border-t-white/5">
-    <div class="p-6 pb-4 border-b border-glass-border flex justify-between items-center">
-      <div>
-        <h2 id="list-title" class="text-lg font-semibold tracking-tight">모든 메모</h2>
-        <p id="list-count" class="text-xs text-text-muted mt-1">0개의 메모</p>
-      </div>
-      <div class="relative group" id="sort-dropdown-container">
-        <button id="btn-sort" class="text-text-muted hover:text-text-main transition-colors p-1" title="정렬 옵션">
-          <i data-feather="sliders" class="w-4 h-4"></i>
-        </button>
-        <div id="sort-dropdown" class="hidden absolute top-full mt-2 right-0 w-32 bg-surface-high border border-glass-border rounded-xl shadow-xl overflow-hidden py-1 z-20">
-          <button class="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-glass-bg hover:text-text-main transition-colors flex items-center justify-between group" data-sort="updatedDesc">수정순 <i data-feather="check" class="w-3 h-3 hidden group-[.active]:block text-primary"></i></button>
-          <button class="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-glass-bg hover:text-text-main transition-colors flex items-center justify-between group" data-sort="createdDesc">생성순 <i data-feather="check" class="w-3 h-3 hidden group-[.active]:block text-primary"></i></button>
-          <button class="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-glass-bg hover:text-text-main transition-colors flex items-center justify-between group" data-sort="titleAsc">이름순 <i data-feather="check" class="w-3 h-3 hidden group-[.active]:block text-primary"></i></button>
+      <!-- Search -->
+      <div class="px-4 mb-4">
+        <div class="relative group">
+          <i
+            data-feather="search"
+            class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors"
+          ></i>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="메모 검색.."
+            class="w-full bg-surface-low border border-glass-border rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-text-muted/50"
+          />
         </div>
       </div>
-    </div>
-    <div id="memo-list" class="flex-1 overflow-y-auto p-4 space-y-3">
-      <!-- Memos rendered here via JS -->
-    </div>
-  </section>
 
-  <!-- Editor Surface -->
-  <main class="relative z-10 flex-1 h-full flex flex-col bg-base/80 backdrop-blur-sm p-4 lg:p-8">
-    <div id="editor-container" class="flex-1 w-full max-w-3xl mx-auto bg-surface-high/30 backdrop-blur-3xl rounded-2xl border border-glass-border shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden opacity-0 transition-opacity duration-300 relative before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent">
-      
-      <!-- Editor Header / Toolbar -->
-      <header class="px-8 py-4 border-b border-glass-border flex items-center justify-between shrink-0 relative">
-        <div class="flex items-center gap-4 w-1/3">
-          <button id="btn-toggle-pin" class="text-text-muted hover:text-accent-mint transition-colors" title="상단 고정">
-            <i data-feather="map-pin" class="w-5 h-5"></i>
-          </button>
-          <button id="btn-toggle-favorite" class="text-text-muted hover:text-accent-amber transition-colors" title="즐겨찾기">
-            <i data-feather="star" class="w-5 h-5"></i>
+      <!-- Navigation -->
+      <nav class="flex-1 overflow-y-auto px-4 pb-6 space-y-1" id="nav-folders">
+        <button
+          class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-bg hover:text-text-main group transition-all"
+          data-filter="all"
+        >
+          <i
+            data-feather="inbox"
+            class="w-4 h-4 text-primary group-hover:text-primary transition-colors"
+          ></i>
+          <span>모든 메모</span>
+        </button>
+        <button
+          class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-bg hover:text-text-main group transition-all"
+          data-filter="favorites"
+        >
+          <i
+            data-feather="star"
+            class="w-4 h-4 group-hover:text-accent-amber transition-colors"
+          ></i>
+          <span>즐겨찾기</span>
+        </button>
+        <button
+          class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-bg hover:text-text-main group transition-all"
+          data-filter="trash"
+        >
+          <i
+            data-feather="trash-2"
+            class="w-4 h-4 group-hover:text-accent-rose transition-colors"
+          ></i>
+          <span>휴지통</span>
+        </button>
+
+        <div
+          class="pt-6 pb-2 px-3 text-xs font-semibold uppercase tracking-widest text-text-muted/50 flex justify-between items-center"
+        >
+          폴더
+          <button
+            id="btn-add-folder"
+            class="hover:text-text-main transition-colors"
+            title="폴더 추가"
+          >
+            <i data-feather="plus" class="w-3 h-3"></i>
           </button>
         </div>
-        
-        <!-- Center Tabs -->
-        <div class="w-1/3 flex justify-center">
-          <div class="flex p-1 bg-black/20 rounded-xl border border-glass-border backdrop-blur-md">
-            <button id="tab-viewer" class="flex items-center gap-2 px-5 py-1.5 rounded-lg text-text-muted hover:text-text-main hover:bg-glass-bg text-sm font-medium transition-all">
-              <i data-feather="book-open" class="w-4 h-4"></i> 뷰어
+        <div id="custom-folders-list" class="space-y-1">
+          <!-- Folders rendered here via JS -->
+        </div>
+      </nav>
+      <div class="p-4 mt-auto border-t border-glass-border">
+        <div class="flex items-center gap-2">
+          <button
+            id="btn-open-settings"
+            class="flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-hover hover:text-text-main transition-colors text-sm font-medium"
+          >
+            <i data-feather="settings" class="w-4 h-4"></i> 설정
+          </button>
+          <button
+            id="btn-open-help"
+            class="flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-text-muted hover:bg-glass-hover hover:text-text-main transition-colors text-sm font-medium"
+          >
+            <i data-feather="help-circle" class="w-4 h-4"></i> 도움말
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Memo List Surface -->
+    <section
+      id="memo-list-section"
+      class="relative z-20 w-full lg:w-80 h-full bg-surface/50 lg:border-r border-glass-border backdrop-blur-2xl flex flex-col border-t border-t-white/5 shrink-0 transition-transform duration-300"
+    >
+      <div
+        class="p-6 pb-4 border-b border-glass-border flex justify-between items-center gap-3"
+      >
+        <button
+          id="btn-open-sidebar"
+          class="lg:hidden text-text-muted hover:text-text-main transition-colors shrink-0"
+        >
+          <i data-feather="menu" class="w-5 h-5"></i>
+        </button>
+        <div class="flex-1 min-w-0">
+          <h2
+            id="list-title"
+            class="text-lg font-semibold tracking-tight truncate"
+          >
+            모든 메모
+          </h2>
+          <p id="list-count" class="text-xs text-text-muted mt-1">0개의 메모</p>
+        </div>
+        <div class="relative group" id="sort-dropdown-container">
+          <button
+            id="btn-sort"
+            class="text-text-muted hover:text-text-main transition-colors p-1"
+            title="정렬 옵션"
+          >
+            <i data-feather="sliders" class="w-4 h-4"></i>
+          </button>
+          <div
+            id="sort-dropdown"
+            class="hidden absolute top-full mt-2 right-0 w-32 bg-surface-high border border-glass-border rounded-xl shadow-xl overflow-hidden py-1 z-20"
+          >
+            <button
+              class="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-glass-bg hover:text-text-main transition-colors flex items-center justify-between group"
+              data-sort="updatedDesc"
+            >
+              수정순
+              <i
+                data-feather="check"
+                class="w-3 h-3 hidden group-[.active]:block text-primary"
+              ></i>
             </button>
-            <button id="tab-editor" class="flex items-center gap-2 px-5 py-1.5 rounded-lg text-text-muted hover:text-text-main hover:bg-glass-bg text-sm font-medium transition-all">
-              <i data-feather="edit-2" class="w-4 h-4"></i> 에디터
+            <button
+              class="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-glass-bg hover:text-text-main transition-colors flex items-center justify-between group"
+              data-sort="createdDesc"
+            >
+              생성순
+              <i
+                data-feather="check"
+                class="w-3 h-3 hidden group-[.active]:block text-primary"
+              ></i>
+            </button>
+            <button
+              class="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-glass-bg hover:text-text-main transition-colors flex items-center justify-between group"
+              data-sort="titleAsc"
+            >
+              이름순
+              <i
+                data-feather="check"
+                class="w-3 h-3 hidden group-[.active]:block text-primary"
+              ></i>
             </button>
           </div>
         </div>
-        
-        <div class="flex items-center gap-4 w-1/3 justify-end">
-          <span id="save-status" class="text-xs text-text-muted/60 font-medium">저장됨</span>
-          <button id="btn-delete-memo" class="text-text-muted hover:text-accent-rose transition-colors" title="휴지통으로 이동">
-            <i data-feather="trash-2" class="w-4 h-4"></i>
+      </div>
+      <div id="memo-list" class="flex-1 overflow-y-auto p-4 space-y-3">
+        <!-- Memos rendered here via JS -->
+      </div>
+    </section>
+
+    <!-- Editor Surface -->
+    <main
+      id="editor-section"
+      class="fixed lg:relative z-30 lg:z-10 inset-0 lg:inset-auto flex-1 h-full flex flex-col bg-base lg:bg-base/80 backdrop-blur-sm p-0 lg:p-8 transform translate-x-full lg:translate-x-0 transition-transform duration-300"
+    >
+      <div
+        id="editor-container"
+        class="flex-1 w-full max-w-3xl mx-auto bg-surface-high/30 backdrop-blur-3xl lg:rounded-2xl lg:border border-glass-border lg:shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden opacity-0 transition-opacity duration-300 relative lg:before:absolute lg:before:inset-x-0 lg:before:top-0 lg:before:h-[1px] lg:before:bg-gradient-to-r lg:before:from-transparent lg:before:via-white/20 lg:before:to-transparent"
+      >
+        <!-- Editor Header / Toolbar -->
+        <header
+          class="px-4 lg:px-8 py-3 lg:py-4 border-b border-glass-border flex flex-wrap items-center justify-between shrink-0 relative gap-y-3"
+        >
+          <div
+            class="flex items-center gap-2 lg:gap-4 w-auto lg:w-1/3 order-1 lg:order-1"
+          >
+            <button
+              id="btn-back-to-list"
+              class="lg:hidden text-text-muted hover:text-text-main transition-colors mr-1"
+            >
+              <i data-feather="chevron-left" class="w-6 h-6"></i>
+            </button>
+            <button
+              id="btn-toggle-pin"
+              class="text-text-muted hover:text-accent-mint transition-colors"
+              title="상단 고정"
+            >
+              <i data-feather="map-pin" class="w-5 h-5"></i>
+            </button>
+            <button
+              id="btn-toggle-favorite"
+              class="text-text-muted hover:text-accent-amber transition-colors"
+              title="즐겨찾기"
+            >
+              <i data-feather="star" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+          <!-- Center Tabs -->
+          <div
+            class="flex justify-center w-full lg:w-1/3 order-3 lg:order-2 mt-2 lg:mt-0"
+          >
+            <div
+              class="flex p-1 bg-black/20 rounded-xl border border-glass-border backdrop-blur-md"
+            >
+              <button
+                id="tab-viewer"
+                class="flex items-center gap-2 px-5 py-1.5 rounded-lg text-text-muted hover:text-text-main hover:bg-glass-bg text-sm font-medium transition-all"
+              >
+                <i data-feather="book-open" class="w-4 h-4"></i> 뷰어
+              </button>
+              <button
+                id="tab-editor"
+                class="flex items-center gap-2 px-5 py-1.5 rounded-lg text-text-muted hover:text-text-main hover:bg-glass-bg text-sm font-medium transition-all"
+              >
+                <i data-feather="edit-2" class="w-4 h-4"></i> 에디터
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="flex items-center justify-end gap-3 lg:gap-4 w-auto lg:w-1/3 order-2 lg:order-3 ml-auto lg:ml-0"
+          >
+            <span
+              id="save-status"
+              class="text-xs text-text-muted/60 font-medium"
+              >저장됨</span
+            >
+            <button
+              id="btn-delete-memo"
+              class="text-text-muted hover:text-accent-rose transition-colors"
+              title="휴지통으로 이동"
+            >
+              <i data-feather="trash-2" class="w-4 h-4"></i>
+            </button>
+            <button
+              id="btn-restore-memo"
+              class="hidden text-accent-mint hover:text-white transition-colors text-sm font-medium border border-accent-mint/30 px-3 py-1.5 rounded-lg"
+              title="휴지통에서 복구"
+            >
+              복구
+            </button>
+          </div>
+        </header>
+
+        <!-- Editor Content (Editable) -->
+        <div
+          id="editor-view"
+          class="flex-1 flex flex-col overflow-y-auto p-8 lg:p-12 scroll-smooth hidden"
+        >
+          <input
+            type="text"
+            id="memo-title"
+            placeholder="제목 없는 메모"
+            class="w-full bg-transparent text-3xl font-bold tracking-tight text-text-main placeholder:text-text-muted/30 focus:outline-none mb-6"
+          />
+
+          <div id="toolbar-container" class="mb-4 shrink-0">
+            <span class="ql-formats">
+              <select class="ql-header">
+                <option value="1">제목 1</option>
+                <option value="2">제목 2</option>
+                <option value="3">제목 3</option>
+                <option selected>본문</option>
+              </select>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-bold"></button>
+              <button class="ql-italic"></button>
+              <button class="ql-underline"></button>
+              <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-list" value="ordered"></button>
+              <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-code-block"></button>
+              <button class="ql-formula"></button>
+              <button class="ql-blockquote"></button>
+            </span>
+          </div>
+
+          <div
+            id="memo-content"
+            class="w-full flex-1 font-editor text-lg leading-relaxed text-text-main/90 focus:outline-none bg-transparent"
+          ></div>
+        </div>
+
+        <!-- Reader Content (Read-Only) -->
+        <div
+          id="reader-view"
+          class="flex-1 overflow-y-auto p-8 lg:p-12 scroll-smooth"
+        >
+          <h1
+            id="reader-title"
+            class="text-3xl font-bold tracking-tight text-text-main mb-8"
+          ></h1>
+          <div
+            id="reader-content"
+            class="font-editor text-lg leading-relaxed text-text-main/90 ql-editor px-0 py-0 min-h-[400px]"
+          ></div>
+        </div>
+
+        <!-- Footer Stats -->
+        <footer
+          class="px-8 py-3 bg-white/[0.02] border-t border-glass-border text-xs text-text-muted flex justify-between items-center"
+        >
+          <div id="word-count">0 단어</div>
+          <div class="relative group" id="folder-selector-container">
+            <button
+              id="btn-folder-selector"
+              class="px-3 py-1.5 rounded-md bg-glass-bg border border-glass-border flex items-center gap-2 cursor-pointer hover:bg-glass-hover transition-colors"
+            >
+              <i data-feather="folder" class="w-3 h-3"></i>
+              <span id="current-folder-name">폴더 없음</span>
+            </button>
+            <!-- Folder Dropdown -->
+            <div
+              id="folder-dropdown"
+              class="hidden absolute bottom-full mb-2 right-0 w-48 bg-surface-high border border-glass-border rounded-xl shadow-xl overflow-hidden py-1 z-20"
+            >
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </footer>
+      </div>
+      <!-- Empty State -->
+      <div
+        id="empty-state"
+        class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+      >
+        <div class="text-center">
+          <div
+            class="w-20 h-20 bg-glass-bg rounded-full flex items-center justify-center mx-auto mb-4 border border-glass-border"
+          >
+            <i data-feather="file-text" class="w-8 h-8 text-text-muted/50"></i>
+          </div>
+          <h3 class="text-xl font-medium text-text-main mb-2">
+            선택된 메모 없음
+          </h3>
+          <p class="text-text-muted text-sm max-w-xs mx-auto">
+            새 메모를 생성하거나 목록에서 메모를 선택해 주세요.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Confirm Modal -->
+    <div
+      id="confirm-modal"
+      class="fixed inset-0 z-[60] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+    >
+      <div
+        class="absolute inset-0 bg-base/80 backdrop-blur-sm"
+        id="confirm-overlay"
+      ></div>
+      <div
+        class="relative bg-surface-high border border-glass-border rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-all duration-300"
+        id="confirm-dialog"
+      >
+        <h3
+          class="text-lg font-semibold text-text-main mb-2"
+          id="confirm-title"
+        >
+          삭제하시겠습니까?
+        </h3>
+        <p class="text-sm text-text-muted mb-6" id="confirm-message">
+          이 작업은 취소할 수 없습니다.
+        </p>
+        <div class="flex justify-end gap-3">
+          <button
+            id="btn-confirm-cancel"
+            class="px-4 py-2 rounded-lg text-sm font-medium text-text-muted hover:text-text-main hover:bg-glass-hover transition-colors"
+          >
+            취소
           </button>
-          <button id="btn-restore-memo" class="hidden text-accent-mint hover:text-white transition-colors text-sm font-medium border border-accent-mint/30 px-3 py-1.5 rounded-lg" title="휴지통에서 복구">
-            복구
+          <button
+            id="btn-confirm-ok"
+            class="px-4 py-2 rounded-lg text-sm font-medium bg-accent-rose text-white shadow-[0_0_15px_rgba(255,180,171,0.2)] hover:bg-[#ffc5bf] transition-colors"
+          >
+            삭제
           </button>
         </div>
-      </header>
-
-      <!-- Editor Content (Editable) -->
-      <div id="editor-view" class="flex-1 flex flex-col overflow-y-auto p-8 lg:p-12 scroll-smooth hidden">
-        <input type="text" id="memo-title" placeholder="제목 없는 메모" class="w-full bg-transparent text-3xl font-bold tracking-tight text-text-main placeholder:text-text-muted/30 focus:outline-none mb-6">
-        
-        <div id="toolbar-container" class="mb-4 shrink-0">
-          <span class="ql-formats">
-            <button class="ql-bold"></button>
-            <button class="ql-italic"></button>
-            <button class="ql-underline"></button>
-            <button class="ql-strike"></button>
-          </span>
-          <span class="ql-formats">
-            <button class="ql-list" value="ordered"></button>
-            <button class="ql-list" value="bullet"></button>
-          </span>
-          <span class="ql-formats">
-            <button class="ql-code-block"></button>
-            <button class="ql-blockquote"></button>
-          </span>
-          <span class="ql-formats">
-            <button class="ql-clean"></button>
-          </span>
-        </div>
-        
-        <div id="memo-content" class="w-full flex-1 font-editor text-lg leading-relaxed text-text-main/90 focus:outline-none bg-transparent"></div>
-      </div>
-
-      <!-- Reader Content (Read-Only) -->
-      <div id="reader-view" class="flex-1 overflow-y-auto p-8 lg:p-12 scroll-smooth">
-        <h1 id="reader-title" class="text-3xl font-bold tracking-tight text-text-main mb-8"></h1>
-        <div id="reader-content" class="font-editor text-lg leading-relaxed text-text-main/90 ql-editor px-0 py-0 min-h-[400px]"></div>
-      </div>
-      
-      <!-- Footer Stats -->
-      <footer class="px-8 py-3 bg-white/[0.02] border-t border-glass-border text-xs text-text-muted flex justify-between items-center">
-        <div id="word-count">0 단어</div>
-        <div class="relative group" id="folder-selector-container">
-           <button id="btn-folder-selector" class="px-3 py-1.5 rounded-md bg-glass-bg border border-glass-border flex items-center gap-2 cursor-pointer hover:bg-glass-hover transition-colors">
-             <i data-feather="folder" class="w-3 h-3"></i> <span id="current-folder-name">폴더 없음</span>
-           </button>
-           <!-- Folder Dropdown -->
-           <div id="folder-dropdown" class="hidden absolute bottom-full mb-2 right-0 w-48 bg-surface-high border border-glass-border rounded-xl shadow-xl overflow-hidden py-1 z-20">
-             <!-- Rendered via JS -->
-           </div>
-        </div>
-      </footer>
-    </div>
-    <!-- Empty State -->
-    <div id="empty-state" class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-      <div class="text-center">
-        <div class="w-20 h-20 bg-glass-bg rounded-full flex items-center justify-center mx-auto mb-4 border border-glass-border">
-          <i data-feather="file-text" class="w-8 h-8 text-text-muted/50"></i>
-        </div>
-        <h3 class="text-xl font-medium text-text-main mb-2">선택된 메모 없음</h3>
-        <p class="text-text-muted text-sm max-w-xs mx-auto">새 메모를 생성하거나 목록에서 메모를 선택해 주세요.</p>
       </div>
     </div>
-  </main>
 
-  <!-- Confirm Modal -->
-  <div id="confirm-modal" class="fixed inset-0 z-[60] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="absolute inset-0 bg-base/80 backdrop-blur-sm" id="confirm-overlay"></div>
-    <div class="relative bg-surface-high border border-glass-border rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-all duration-300" id="confirm-dialog">
-      <h3 class="text-lg font-semibold text-text-main mb-2" id="confirm-title">삭제하시겠습니까?</h3>
-      <p class="text-sm text-text-muted mb-6" id="confirm-message">이 작업은 취소할 수 없습니다.</p>
-      <div class="flex justify-end gap-3">
-        <button id="btn-confirm-cancel" class="px-4 py-2 rounded-lg text-sm font-medium text-text-muted hover:text-text-main hover:bg-glass-hover transition-colors">취소</button>
-        <button id="btn-confirm-ok" class="px-4 py-2 rounded-lg text-sm font-medium bg-accent-rose text-white shadow-[0_0_15px_rgba(255,180,171,0.2)] hover:bg-[#ffc5bf] transition-colors">삭제</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Settings & Help Modal -->
-  <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="absolute inset-0 bg-base/80 backdrop-blur-sm" id="settings-overlay"></div>
-    <div class="relative bg-surface-high border border-glass-border rounded-2xl w-full max-w-3xl mx-4 max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300" id="settings-dialog">
-      
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-glass-border shrink-0">
-        <div class="flex gap-6">
-          <button id="tab-settings" class="text-lg font-semibold text-text-main pb-1 border-b-2 border-primary transition-colors">설정</button>
-          <button id="tab-help" class="text-lg font-semibold text-text-muted hover:text-text-main pb-1 border-b-2 border-transparent transition-colors">도움말</button>
-        </div>
-        <button id="btn-close-settings" class="text-text-muted hover:text-text-main transition-colors">
-          <i data-feather="x" class="w-6 h-6"></i>
-        </button>
-      </div>
-
-      <!-- Modal Body -->
-      <div class="flex-1 overflow-y-auto p-6 scroll-smooth">
-        
-        <!-- Settings Content -->
-        <div id="settings-content" class="space-y-8">
-          
-          <!-- Appearance -->
-          <section>
-            <h4 class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-4 flex items-center gap-2"><i data-feather="monitor" class="w-4 h-4"></i> 디스플레이</h4>
-            <div class="space-y-4">
-              <div class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border">
-                <div>
-                  <div class="font-medium text-text-main">라이트 모드</div>
-                  <div class="text-sm text-text-muted">어두운 테마 대신 밝은 테마를 사용합니다.</div>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="toggle-theme" class="sr-only peer">
-                  <div class="w-11 h-6 bg-surface-low peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                </label>
-              </div>
-              
-              <div class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border">
-                <div>
-                  <div class="font-medium text-text-main">코드 블록 테마</div>
-                  <div class="text-sm text-text-muted">코드 블록의 색상 스타일을 변경합니다.</div>
-                </div>
-                <select id="select-code-theme" class="bg-surface-low border border-glass-border text-text-main text-sm rounded-lg focus:ring-primary focus:border-primary block p-2 outline-none">
-                  <option value="obsidian">딥 옵시디언 (기본)</option>
-                  <option value="glass">글래스 캔버스</option>
-                  <option value="indigo">미드나잇 인디고</option>
-                </select>
-              </div>
-              
-              <div class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border">
-                <div>
-                  <div class="font-medium text-text-main">기본 보기 모드</div>
-                  <div class="text-sm text-text-muted">메모를 열 때 에디터와 뷰어 중 어떤 모드로 열지 선택합니다.</div>
-                </div>
-                <select id="select-default-view" class="bg-surface-low border border-glass-border text-text-main text-sm rounded-lg focus:ring-primary focus:border-primary block p-2 outline-none">
-                  <option value="viewer">뷰어 (Viewer)</option>
-                  <option value="editor">에디터 (Editor)</option>
-                </select>
-              </div>
-              
-              <div class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border">
-                <div>
-                  <div class="font-medium text-text-main">하단 글자 수 표시</div>
-                  <div class="text-sm text-text-muted">에디터 우측 하단에 글자 수 통계를 표시합니다.</div>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="toggle-wordcount" class="sr-only peer" checked>
-                  <div class="w-11 h-6 bg-surface-low peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                </label>
-              </div>
-            </div>
-          </section>
-          
-          <!-- Data Management -->
-          <section>
-            <h4 class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-4 flex items-center gap-2"><i data-feather="database" class="w-4 h-4"></i> 데이터 관리</h4>
-            <div class="space-y-4">
-              <div class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border">
-                <div>
-                  <div class="font-medium text-text-main">데이터 내보내기 (Backup)</div>
-                  <div class="text-sm text-text-muted">모든 메모와 폴더를 JSON 파일로 다운로드합니다.</div>
-                </div>
-                <button id="btn-export-data" class="px-4 py-2 bg-glass-bg border border-glass-border rounded-lg text-sm font-medium text-text-main hover:bg-glass-hover transition-colors">내보내기</button>
-              </div>
-              
-              <div class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border">
-                <div>
-                  <div class="font-medium text-text-main">데이터 가져오기 (Restore)</div>
-                  <div class="text-sm text-text-muted">JSON 백업 파일에서 데이터를 복원합니다. <span class="text-accent-amber">(기존 데이터 덮어쓰기)</span></div>
-                </div>
-                <div>
-                  <input type="file" id="file-import-data" accept=".json" class="hidden">
-                  <button id="btn-import-data" class="px-4 py-2 bg-glass-bg border border-glass-border rounded-lg text-sm font-medium text-text-main hover:bg-glass-hover transition-colors">가져오기</button>
-                </div>
-              </div>
-              
-              <div class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border">
-                <div>
-                  <div class="font-medium text-accent-rose">공장 초기화 (Factory Reset)</div>
-                  <div class="text-sm text-text-muted">모든 데이터와 설정을 삭제하고 초기 상태로 되돌립니다.</div>
-                </div>
-                <button id="btn-reset-data" class="px-4 py-2 bg-accent-rose/10 border border-accent-rose/20 rounded-lg text-sm font-medium text-accent-rose hover:bg-accent-rose/20 transition-colors">초기화</button>
-              </div>
-            </div>
-          </section>
+    <!-- Settings & Help Modal -->
+    <div
+      id="settings-modal"
+      class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+    >
+      <div
+        class="absolute inset-0 bg-base/80 backdrop-blur-sm"
+        id="settings-overlay"
+      ></div>
+      <div
+        class="relative bg-surface-high border border-glass-border rounded-2xl w-full max-w-3xl mx-4 max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300"
+        id="settings-dialog"
+      >
+        <!-- Modal Header -->
+        <div
+          class="flex items-center justify-between px-6 py-4 border-b border-glass-border shrink-0"
+        >
+          <div class="flex gap-6">
+            <button
+              id="tab-settings"
+              class="text-lg font-semibold text-text-main pb-1 border-b-2 border-primary transition-colors"
+            >
+              설정
+            </button>
+            <button
+              id="tab-help"
+              class="text-lg font-semibold text-text-muted hover:text-text-main pb-1 border-b-2 border-transparent transition-colors"
+            >
+              도움말
+            </button>
+          </div>
+          <button
+            id="btn-close-settings"
+            class="text-text-muted hover:text-text-main transition-colors"
+          >
+            <i data-feather="x" class="w-6 h-6"></i>
+          </button>
         </div>
 
-        <!-- Help Content (Initially Hidden) -->
-        <div id="help-content" class="space-y-8 hidden">
-          <section>
-            <h4 class="text-lg font-semibold text-text-main mb-4 flex items-center gap-2"><i data-feather="command" class="w-5 h-5 text-primary"></i> 단축키 안내</h4>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center">
-                <span class="text-text-muted text-sm">굵게 (Bold)</span>
-                <kbd class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main">Ctrl + B</kbd>
-              </div>
-              <div class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center">
-                <span class="text-text-muted text-sm">기울임꼴 (Italic)</span>
-                <kbd class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main">Ctrl + I</kbd>
-              </div>
-              <div class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center">
-                <span class="text-text-muted text-sm">밑줄 (Underline)</span>
-                <kbd class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main">Ctrl + U</kbd>
-              </div>
-              <div class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center">
-                <span class="text-text-muted text-sm">폴더 이름 저장</span>
-                <kbd class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main">Enter</kbd>
-              </div>
-              <div class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center">
-                <span class="text-text-muted text-sm">작업 취소</span>
-                <kbd class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main">Esc</kbd>
-              </div>
-            </div>
-          </section>
-          
-          <section>
-            <h4 class="text-lg font-semibold text-text-main mb-4 flex items-center gap-2"><i data-feather="info" class="w-5 h-5 text-primary"></i> Zenith 가이드</h4>
-            <div class="bg-glass-bg p-5 rounded-xl border border-glass-border space-y-4">
-              <div>
-                <h5 class="font-medium text-text-main mb-1">뷰어와 에디터</h5>
-                <p class="text-sm text-text-muted leading-relaxed">상단의 [📖 뷰어] 탭과 [✏️ 에디터] 탭을 눌러 모드를 전환하세요. 뷰어 모드는 읽기에 최적화되어 있으며, 에디터 모드에서는 자유로운 수정이 가능합니다.</p>
-              </div>
-              <div>
-                <h5 class="font-medium text-text-main mb-1">폴더 관리</h5>
-                <p class="text-sm text-text-muted leading-relaxed">좌측 폴더 이름에 마우스를 올리면 수정 및 삭제 아이콘이 나타납니다. 폴더를 삭제해도 안의 메모는 '모든 메모'에 보존됩니다.</p>
-              </div>
-            </div>
-          </section>
+        <!-- Modal Body -->
+        <div class="flex-1 overflow-y-auto p-6 scroll-smooth">
+          <!-- Settings Content -->
+          <div id="settings-content" class="space-y-8">
+            <!-- Appearance -->
+            <section>
+              <h4
+                class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-4 flex items-center gap-2"
+              >
+                <i data-feather="monitor" class="w-4 h-4"></i> 디스플레이
+              </h4>
+              <div class="space-y-4">
+                <div
+                  class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border"
+                >
+                  <div>
+                    <div class="font-medium text-text-main">라이트 모드</div>
+                    <div class="text-sm text-text-muted">
+                      어두운 테마 대신 밝은 테마를 사용합니다.
+                    </div>
+                  </div>
+                  <label
+                    class="relative inline-flex items-center cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="toggle-theme"
+                      class="sr-only peer"
+                    />
+                    <div
+                      class="w-11 h-6 bg-surface-low peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"
+                    ></div>
+                  </label>
+                </div>
 
-          <div class="pt-8 text-center">
-            <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-primary/20">
-              <i data-feather="zap" class="w-6 h-6 text-primary"></i>
+                <div
+                  class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border"
+                >
+                  <div>
+                    <div class="font-medium text-text-main">코드 블록 테마</div>
+                    <div class="text-sm text-text-muted">
+                      코드 블록의 색상 스타일을 변경합니다.
+                    </div>
+                  </div>
+                  <select
+                    id="select-code-theme"
+                    class="bg-surface-low border border-glass-border text-text-main text-sm rounded-lg focus:ring-primary focus:border-primary block p-2 outline-none"
+                  >
+                    <option value="obsidian">딥 옵시디언 (기본)</option>
+                    <option value="glass">글래스 캔버스</option>
+                    <option value="indigo">미드나잇 인디고</option>
+                  </select>
+                </div>
+
+                <div
+                  class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border"
+                >
+                  <div>
+                    <div class="font-medium text-text-main">기본 보기 모드</div>
+                    <div class="text-sm text-text-muted">
+                      메모를 열 때 에디터와 뷰어 중 어떤 모드로 열지 선택합니다.
+                    </div>
+                  </div>
+                  <select
+                    id="select-default-view"
+                    class="bg-surface-low border border-glass-border text-text-main text-sm rounded-lg focus:ring-primary focus:border-primary block p-2 outline-none"
+                  >
+                    <option value="viewer">뷰어 (Viewer)</option>
+                    <option value="editor">에디터 (Editor)</option>
+                  </select>
+                </div>
+
+                <div
+                  class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border"
+                >
+                  <div>
+                    <div class="font-medium text-text-main">
+                      하단 글자 수 표시
+                    </div>
+                    <div class="text-sm text-text-muted">
+                      에디터 우측 하단에 글자 수 통계를 표시합니다.
+                    </div>
+                  </div>
+                  <label
+                    class="relative inline-flex items-center cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="toggle-wordcount"
+                      class="sr-only peer"
+                      checked
+                    />
+                    <div
+                      class="w-11 h-6 bg-surface-low peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"
+                    ></div>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <!-- Data Management -->
+            <section>
+              <h4
+                class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-4 flex items-center gap-2"
+              >
+                <i data-feather="database" class="w-4 h-4"></i> 데이터 관리
+              </h4>
+              <div class="space-y-4">
+                <div
+                  class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border"
+                >
+                  <div>
+                    <div class="font-medium text-text-main">
+                      데이터 내보내기 (Backup)
+                    </div>
+                    <div class="text-sm text-text-muted">
+                      모든 메모와 폴더를 JSON 파일로 다운로드합니다.
+                    </div>
+                  </div>
+                  <button
+                    id="btn-export-data"
+                    class="px-4 py-2 bg-glass-bg border border-glass-border rounded-lg text-sm font-medium text-text-main hover:bg-glass-hover transition-colors"
+                  >
+                    내보내기
+                  </button>
+                </div>
+
+                <div
+                  class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border"
+                >
+                  <div>
+                    <div class="font-medium text-text-main">
+                      데이터 가져오기 (Restore)
+                    </div>
+                    <div class="text-sm text-text-muted">
+                      JSON 백업 파일에서 데이터를 복원합니다.
+                      <span class="text-accent-amber"
+                        >(기존 데이터 덮어쓰기)</span
+                      >
+                    </div>
+                  </div>
+                  <div>
+                    <input
+                      type="file"
+                      id="file-import-data"
+                      accept=".json"
+                      class="hidden"
+                    />
+                    <button
+                      id="btn-import-data"
+                      class="px-4 py-2 bg-glass-bg border border-glass-border rounded-lg text-sm font-medium text-text-main hover:bg-glass-hover transition-colors"
+                    >
+                      가져오기
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="flex items-center justify-between bg-glass-bg p-4 rounded-xl border border-glass-border"
+                >
+                  <div>
+                    <div class="font-medium text-accent-rose">
+                      공장 초기화 (Factory Reset)
+                    </div>
+                    <div class="text-sm text-text-muted">
+                      모든 데이터와 설정을 삭제하고 초기 상태로 되돌립니다.
+                    </div>
+                  </div>
+                  <button
+                    id="btn-reset-data"
+                    class="px-4 py-2 bg-accent-rose/10 border border-accent-rose/20 rounded-lg text-sm font-medium text-accent-rose hover:bg-accent-rose/20 transition-colors"
+                  >
+                    초기화
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Help Content (Initially Hidden) -->
+          <div id="help-content" class="space-y-8 hidden">
+            <section>
+              <h4
+                class="text-lg font-semibold text-text-main mb-4 flex items-center gap-2"
+              >
+                <i data-feather="command" class="w-5 h-5 text-primary"></i>
+                단축키 안내
+              </h4>
+              <div class="grid grid-cols-2 gap-4">
+                <div
+                  class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center"
+                >
+                  <span class="text-text-muted text-sm">굵게 (Bold)</span>
+                  <kbd
+                    class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main"
+                    >Ctrl + B</kbd
+                  >
+                </div>
+                <div
+                  class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center"
+                >
+                  <span class="text-text-muted text-sm">기울임꼴 (Italic)</span>
+                  <kbd
+                    class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main"
+                    >Ctrl + I</kbd
+                  >
+                </div>
+                <div
+                  class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center"
+                >
+                  <span class="text-text-muted text-sm">밑줄 (Underline)</span>
+                  <kbd
+                    class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main"
+                    >Ctrl + U</kbd
+                  >
+                </div>
+                <div
+                  class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center"
+                >
+                  <span class="text-text-muted text-sm">폴더 이름 저장</span>
+                  <kbd
+                    class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main"
+                    >Enter</kbd
+                  >
+                </div>
+                <div
+                  class="bg-glass-bg p-4 rounded-xl border border-glass-border flex justify-between items-center"
+                >
+                  <span class="text-text-muted text-sm">작업 취소</span>
+                  <kbd
+                    class="px-2 py-1 bg-surface-low border border-glass-border rounded text-xs text-text-main"
+                    >Esc</kbd
+                  >
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h4
+                class="text-lg font-semibold text-text-main mb-4 flex items-center gap-2"
+              >
+                <i data-feather="info" class="w-5 h-5 text-primary"></i> Zenith
+                가이드
+              </h4>
+              <div
+                class="bg-glass-bg p-5 rounded-xl border border-glass-border space-y-4"
+              >
+                <div>
+                  <h5 class="font-medium text-text-main mb-1">뷰어와 에디터</h5>
+                  <p class="text-sm text-text-muted leading-relaxed">
+                    상단의 뷰어 탭과 에디터 탭을 눌러 모드를 전환하세요. 뷰어
+                    모드는 읽기에 최적화되어 있으며, 에디터 모드에서는 자유로운
+                    수정이 가능합니다.
+                  </p>
+                </div>
+                <div>
+                  <h5 class="font-medium text-text-main mb-1">폴더 관리</h5>
+                  <p class="text-sm text-text-muted leading-relaxed">
+                    좌측 폴더 이름에 마우스를 올리면 수정 및 삭제 아이콘이
+                    나타납니다. 폴더를 삭제해도 안의 메모는 '모든 메모'에
+                    보존됩니다.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <div class="pt-8 text-center">
+              <div
+                class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-primary/20"
+              >
+                <i data-feather="zap" class="w-6 h-6 text-primary"></i>
+              </div>
+              <h3 class="font-semibold text-text-main">Zenith Memo App</h3>
+              <p class="text-sm text-text-muted mt-1">Version 1.0.0</p>
             </div>
-            <h3 class="font-semibold text-text-main">Zenith Memo App</h3>
-            <p class="text-sm text-text-muted mt-1">Version 1.0.0</p>
           </div>
         </div>
-        
       </div>
     </div>
-  </div>
 
-  <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>

@@ -203,6 +203,46 @@ const DOM = {
   folderDropdown: document.getElementById('folder-dropdown'),
 };
 
+// --- Mobile UI State & Elements ---
+const DOMMobile = {
+  sidebar: document.getElementById('sidebar'),
+  sidebarOverlay: document.getElementById('sidebar-overlay'),
+  memoListSection: document.getElementById('memo-list-section'),
+  editorSection: document.getElementById('editor-section'),
+  btnOpenSidebar: document.getElementById('btn-open-sidebar'),
+  btnBackToList: document.getElementById('btn-back-to-list'),
+};
+
+function toggleSidebar(show) {
+  if (!DOMMobile.sidebar || !DOMMobile.sidebarOverlay) return;
+  if (show) {
+    DOMMobile.sidebar.classList.remove('-translate-x-full');
+    DOMMobile.sidebarOverlay.classList.remove('hidden');
+    setTimeout(() => DOMMobile.sidebarOverlay.classList.remove('opacity-0'), 10);
+  } else {
+    DOMMobile.sidebar.classList.add('-translate-x-full');
+    DOMMobile.sidebarOverlay.classList.add('opacity-0');
+    setTimeout(() => DOMMobile.sidebarOverlay.classList.add('hidden'), 300);
+  }
+}
+
+function showMobileEditor() {
+  if (window.innerWidth < 1024 && DOMMobile.editorSection) {
+    DOMMobile.editorSection.classList.remove('translate-x-full');
+    DOMMobile.editorSection.classList.add('!translate-x-0');
+  }
+}
+
+function hideMobileEditor() {
+  if (DOMMobile.editorSection) {
+    DOMMobile.editorSection.classList.add('translate-x-full');
+    DOMMobile.editorSection.classList.remove('!translate-x-0');
+    AppState.activeMemoId = null;
+    loadActiveMemo();
+    renderMemoList(); // Remove active styling
+  }
+}
+
 // --- Utilities ---
 function debounce(func, wait) {
   let timeout;
@@ -324,7 +364,7 @@ function renderMemoList() {
     const card = document.createElement('div');
     const isActive = memo.id === AppState.activeMemoId;
     
-    card.className = `p-4 rounded-2xl cursor-pointer transition-all duration-300 border memo-card-enter ${isActive ? 'bg-surface-high border-primary/30 shadow-[0_4px_20px_rgba(99,102,241,0.15)]' : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10'}`;
+    card.className = `p-4 rounded-2xl cursor-pointer transition-all duration-300 border memo-card-enter ${isActive ? 'bg-surface-high border-primary/30 shadow-[0_4px_20px_rgba(139,92,246,0.15)]' : 'bg-glass-bg border-glass-border hover:bg-glass-hover hover:border-primary/20'}`;
     card.dataset.id = memo.id;
     card.innerHTML = `
       <div class="flex justify-between items-start mb-1">
@@ -342,6 +382,7 @@ function renderMemoList() {
       AppState.activeMemoId = memo.id;
       renderMemoList(); // Re-render to update active state
       loadActiveMemo();
+      showMobileEditor();
     });
 
     DOM.memoList.appendChild(card);
@@ -365,6 +406,7 @@ function loadActiveMemo() {
   isSystemLoading = true;
   DOM.memoTitle.value = memo.title;
   quill.root.innerHTML = memo.content || '';
+  setTimeout(() => { if (typeof ensureTrailingParagraph === 'function') ensureTrailingParagraph(); }, 0);
   isSystemLoading = false;
   
   updateWordCount();
@@ -487,18 +529,57 @@ function setMode(mode) {
 
     // Sync content to reader
     if(DOM.readerTitle) DOM.readerTitle.textContent = DOM.memoTitle.value || '제목 없는 메모';
-    if(quill && DOM.readerContent) DOM.readerContent.innerHTML = quill.root.innerHTML;
+    if(quill && DOM.readerContent) {
+      DOM.readerContent.innerHTML = quill.root.innerHTML;
+      // Apply syntax highlighting to code blocks in reader view
+      DOM.readerContent.querySelectorAll('pre.ql-syntax').forEach(block => {
+        hljs.highlightElement(block);
+      });
+    }
   }
 }
 
 function initQuill() {
   quill = new Quill('#memo-content', {
     modules: {
+      formula: true,
       syntax: true,
       toolbar: '#toolbar-container'
     },
     theme: 'snow',
+    bounds: '#editor-container',
     placeholder: '내용을 입력하세요...'
+  });
+  // Helper to ensure editor always ends with a normal paragraph if it ends with a block element
+  function ensureTrailingParagraph() {
+    const length = quill.getLength();
+    if (length > 0) {
+      const format = quill.getFormat(length - 1);
+      if (format['code-block'] || format['blockquote']) {
+        quill.insertText(length, '\n', Quill.sources.SILENT);
+        quill.removeFormat(length, 1, Quill.sources.SILENT);
+      }
+    }
+  }
+
+  // Prevent browser native hit-testing from snapping the cursor into the code block
+  // when clicking the empty space below the last element.
+  DOM.editorContainer.addEventListener('mousedown', (e) => {
+    if (e.target === DOM.editorContainer || e.target.id === 'editor' || e.target === quill.root) {
+      if (e.target === quill.root && e.offsetX >= quill.root.clientWidth) return; // Ignore scrollbar
+
+      const lastEl = quill.root.lastElementChild;
+      if (lastEl) {
+        const rect = lastEl.getBoundingClientRect();
+        // If the user clicked below the bottom edge of the last element
+        if (e.clientY > rect.bottom) {
+          e.preventDefault(); // Stop native caret positioning
+          ensureTrailingParagraph();
+          // Place cursor at the very end of the document (inside the safe trailing paragraph)
+          quill.setSelection(quill.getLength() - 1, 0, Quill.sources.USER);
+        }
+      }
+    }
   });
   
   // Custom Enter binding for blockquote and code-block
@@ -526,6 +607,7 @@ function initQuill() {
 
   // Editor content change
   quill.on('text-change', () => {
+    ensureTrailingParagraph();
     if (!isSystemLoading) {
       handleInput();
     }
@@ -616,6 +698,7 @@ DOM.navFolders.addEventListener('click', (e) => {
     renderMemoList();
     AppState.activeMemoId = null; 
     loadActiveMemo();
+    if (window.innerWidth < 1024) toggleSidebar(false);
   }
 });
 
@@ -629,6 +712,8 @@ DOM.btnNewMemo.addEventListener('click', () => {
   }
   renderMemoList();
   loadActiveMemo();
+  showMobileEditor();
+  if (window.innerWidth < 1024) toggleSidebar(false);
   DOM.memoTitle.focus();
 });
 
@@ -762,6 +847,11 @@ document.addEventListener('click', () => {
   DOM.folderDropdown.classList.add('hidden');
   if (DOM.sortDropdown) DOM.sortDropdown.classList.add('hidden');
 });
+
+// Mobile Event Listeners
+if (DOMMobile.btnOpenSidebar) DOMMobile.btnOpenSidebar.addEventListener('click', () => toggleSidebar(true));
+if (DOMMobile.sidebarOverlay) DOMMobile.sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+if (DOMMobile.btnBackToList) DOMMobile.btnBackToList.addEventListener('click', hideMobileEditor);
 
 // --- Init ---
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,31 +1,31 @@
 :root {
-  /* Light Theme (Default fallback or explicitly light) */
-  --color-base: #f8fafc;
-  --color-surface: #ffffff;
-  --color-surface-low: #f1f5f9;
-  --color-surface-high: #e2e8f0;
+  /* Light Theme (Soft Lavender Mute) */
+  --color-base: #f4f2f9;
+  --color-surface: #fcfbfe;
+  --color-surface-low: #eae6f2;
+  --color-surface-high: #ded9e9;
   
-  --color-text-main: #0f172a;
-  --color-text-muted: #64748b;
+  --color-text-main: #2e293b;
+  --color-text-muted: #726a85;
   
-  --color-glass-bg: rgba(0, 0, 0, 0.05);
-  --color-glass-border: rgba(0, 0, 0, 0.1);
-  --color-glass-hover: rgba(0, 0, 0, 0.1);
+  --color-glass-bg: rgba(76, 58, 115, 0.04);
+  --color-glass-border: rgba(76, 58, 115, 0.08);
+  --color-glass-hover: rgba(76, 58, 115, 0.12);
 }
 
 html.dark {
-  /* Dark Theme */
-  --color-base: #020617;
-  --color-surface: #0b1326;
-  --color-surface-low: #131b2e;
-  --color-surface-high: #222a3d;
+  /* Twilight Zenith Theme (Soft Dark) */
+  --color-base: #18192a;
+  --color-surface: #202238;
+  --color-surface-low: #282a46;
+  --color-surface-high: #323554;
   
-  --color-text-main: #dae2fd;
-  --color-text-muted: #c7c4d7;
+  --color-text-main: #f1f5f9;
+  --color-text-muted: #94a3b8;
   
-  --color-glass-bg: rgba(255, 255, 255, 0.05);
-  --color-glass-border: rgba(255, 255, 255, 0.1);
-  --color-glass-hover: rgba(255, 255, 255, 0.1);
+  --color-glass-bg: rgba(255, 255, 255, 0.06);
+  --color-glass-border: rgba(255, 255, 255, 0.12);
+  --color-glass-hover: rgba(255, 255, 255, 0.15);
 }
 
 @font-face {
@@ -86,11 +86,11 @@ html.dark {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-glass-hover);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-text-muted);
 }
 
 /* Glassmorphism utilities */
@@ -131,29 +131,125 @@ mark {
 }
 
 .ql-snow .ql-stroke {
-  stroke: #c7c4d7 !important;
+  stroke: var(--color-text-muted) !important;
 }
 
 .ql-snow .ql-fill {
-  fill: #c7c4d7 !important;
+  fill: var(--color-text-muted) !important;
 }
 
 .ql-snow .ql-picker {
-  color: #c7c4d7 !important;
+  color: var(--color-text-muted) !important;
+}
+
+/* Quill Picker (Header Dropdown) Theme */
+.ql-snow .ql-picker-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  border: 1px solid var(--color-glass-border) !important;
+  border-radius: 8px !important;
+  padding: 0 24px 0 8px !important;
+  height: 24px !important;
+  line-height: normal !important;
+  color: var(--color-text-muted) !important;
+  background: var(--color-glass-bg) !important;
+  transition: all 0.2s ease;
+}
+
+.ql-snow .ql-picker-label::before {
+  line-height: normal !important;
+}
+
+.ql-snow .ql-picker-label svg {
+  right: 8px !important;
+  margin-top: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+.ql-snow .ql-picker-label:hover,
+.ql-snow .ql-picker-label.ql-active {
+  color: var(--color-text-main) !important;
+  border-color: rgba(139, 92, 246, 0.3) !important;
+  background: rgba(139, 92, 246, 0.08) !important;
+}
+
+.ql-snow .ql-picker-options {
+  background-color: var(--color-surface-high) !important;
+  border: 1px solid var(--color-glass-border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+  padding: 6px !important;
+  backdrop-filter: blur(20px);
+  margin-top: 4px !important;
+}
+
+.ql-snow .ql-picker-item {
+  color: var(--color-text-muted) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  transition: all 0.15s ease;
+}
+
+.ql-snow .ql-picker-item:hover {
+  color: var(--color-text-main) !important;
+  background: var(--color-glass-hover) !important;
+}
+
+.ql-snow .ql-picker-item.ql-selected {
+  color: #8b5cf6 !important;
+  background: rgba(139, 92, 246, 0.1) !important;
+}
+
+/* Header picker styling & translations */
+.ql-snow .ql-picker.ql-header .ql-picker-label::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item::before {
+  font-family: 'Sweet', 'Inter', sans-serif !important;
+  content: '본문' !important;
+}
+
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+  content: '제목 1' !important;
+}
+
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+  content: '제목 2' !important;
+}
+
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+  content: '제목 3' !important;
+}
+
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+  font-size: 1.6em !important;
+  font-weight: 700 !important;
+}
+
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+  font-size: 1.3em !important;
+  font-weight: 600 !important;
+}
+
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+  font-size: 1.1em !important;
+  font-weight: 600 !important;
 }
 
 .ql-toolbar.ql-snow button:hover .ql-stroke,
 .ql-toolbar.ql-snow button:focus .ql-stroke,
 .ql-toolbar.ql-snow button.ql-active .ql-stroke,
 .ql-toolbar.ql-snow .ql-picker-label:hover .ql-stroke {
-  stroke: #dae2fd !important;
+  stroke: var(--color-text-main) !important;
 }
 
 .ql-toolbar.ql-snow button:hover .ql-fill,
 .ql-toolbar.ql-snow button:focus .ql-fill,
 .ql-toolbar.ql-snow button.ql-active .ql-fill,
 .ql-toolbar.ql-snow .ql-picker-label:hover .ql-fill {
-  fill: #dae2fd !important;
+  fill: var(--color-text-main) !important;
 }
 
 .ql-container.ql-snow {
@@ -168,7 +264,8 @@ mark {
 }
 
 .ql-editor.ql-blank::before {
-  color: rgba(199, 196, 215, 0.3) !important;
+  color: var(--color-text-muted) !important;
+  opacity: 0.5;
   left: 0 !important;
   font-style: normal !important;
 }
@@ -186,7 +283,7 @@ body:not(.theme-glass):not(.theme-indigo) .ql-editor pre {
   font-size: 0.9em !important;
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
   margin-top: 1em !important;
-  margin-bottom: 1em !important;
+  margin-bottom: 2px !important;
 }
 
 /* 2. Glass Canvas */
@@ -201,7 +298,7 @@ body.theme-glass .ql-editor pre {
   font-family: 'Inter', monospace !important;
   font-size: 0.9em !important;
   margin-top: 1em !important;
-  margin-bottom: 1em !important;
+  margin-bottom: 2px !important;
 }
 
 /* 3. Midnight Indigo */
@@ -215,7 +312,13 @@ body.theme-indigo .ql-editor pre {
   font-family: 'Inter', monospace !important;
   font-size: 0.9em !important;
   margin-top: 1em !important;
-  margin-bottom: 1em !important;
+  margin-bottom: 2px !important;
+}
+
+/* Add margin to elements following code blocks */
+.ql-editor pre.ql-syntax + *,
+.ql-editor pre + * {
+  margin-top: 1em !important;
 }
 
 .ql-editor code {
@@ -226,3 +329,78 @@ body.theme-indigo .ql-editor pre {
   font-family: 'Inter', monospace !important;
   font-size: 0.9em !important;
 }
+
+/* Quill Tooltip Theme Override */
+.ql-snow .ql-tooltip {
+  background-color: var(--color-surface-high) !important;
+  border: 1px solid var(--color-glass-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+  border-radius: 12px !important;
+  color: var(--color-text-main) !important;
+  padding: 10px 14px !important;
+  backdrop-filter: blur(20px);
+  z-index: 50 !important;
+}
+
+.ql-snow .ql-tooltip input[type=text] {
+  background-color: var(--color-surface-low) !important;
+  border: 1px solid var(--color-glass-border) !important;
+  color: var(--color-text-main) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  font-family: 'Inter', sans-serif !important;
+  margin-right: 8px !important;
+}
+
+.ql-snow .ql-tooltip input[type=text]:focus {
+  border-color: var(--color-primary-light) !important;
+  outline: none !important;
+}
+
+.ql-snow .ql-tooltip a.ql-action::before {
+  color: var(--color-text-main) !important;
+  background-color: var(--color-primary-dark) !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s;
+}
+
+.ql-snow .ql-tooltip a.ql-action:hover::before {
+  background-color: var(--color-primary-light) !important;
+}
+
+.ql-snow .ql-tooltip a.ql-preview {
+  color: var(--color-text-muted) !important;
+}
+
+/* Editor Headers Styling */
+.ql-editor h1 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 2em !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 0.5em !important;
+  color: var(--color-text-main) !important;
+  letter-spacing: -0.025em;
+}
+
+.ql-editor h2 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1.5em !important;
+  margin-top: 1.25em !important;
+  margin-bottom: 0.5em !important;
+  color: var(--color-text-main) !important;
+  letter-spacing: -0.025em;
+}
+
+.ql-editor h3 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1.25em !important;
+  margin-top: 1em !important;
+  margin-bottom: 0.5em !important;
+  color: var(--color-text-main) !important;
+}
+
